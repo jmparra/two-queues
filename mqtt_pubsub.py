@@ -13,30 +13,34 @@ class MQTTPubSub(object):
         self.pubsu = mosquitto.Mosquitto(client_uniq)
         self.pubsu.connect(host)
         self.pubsu.on_message = self.on_message
-        #self.pub = context.socket(zmq.PUSH)
-        #self.pub.connect("tcp://%s:%s" % (host, 5562))
-        #self.sub = context.socket(zmq.SUB)
-        #self.sub.connect("tcp://%s:%s" % (host, 5561))
         self.channels = set()
-        self.received = True
+        self.received = False
         self.message  = ""
 
     def on_message(self, obj, msg):
         self.message = msg.topic+" "+msg.payload
-        self.received = True 
+        self.received = True
 
     def publish(self, channel, message):
         self.pubsu.publish(channel, message)
 
     def subscribe(self, channels):
-        for channel in channels:
-            self.channels.add(channel)
-            self.pubsu.subscribe(channel)
+        if type(channels) == list:
+            for channel in channels:
+                self.channels.add(channel)
+                self.pubsu.subscribe(channel)
+        else:
+            self.channels.add(channels)
+            self.pubsu.subscribe(channels)
 
     def unsubscribe(self, channels):
-        for channel in channels:
-            self.channels.remove(channel)
-            self.pubsu.unsubscribe(channel)
+        if type(channels) == list:
+            for channel in channels:
+                self.channels.remove(channel)
+                self.pubsu.unsubscribe(channel)
+        else:
+            self.channels.remove(channels)
+            self.pubsu.unsubscribe(channels)
 
     def pubsub(self):
         return self
@@ -62,6 +66,7 @@ if __name__ == "__main__":
     try:
         while True:
             pubsub.publish("teste",pubsub.recv())
+            #print pubsub.recv()
             messages += 1
             now = time.time()
             if now - last > 1:
