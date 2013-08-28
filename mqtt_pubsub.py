@@ -18,18 +18,18 @@ class MQTTPubSub(object):
         #self.sub = context.socket(zmq.SUB)
         #self.sub.connect("tcp://%s:%s" % (host, 5561))
         self.channels = set()
+        self.received = True
+        self.message  = ""
 
-    def on_message(mosq, obj, msg):
-        ret = msg.topic+" "+msg.payload
-        print("Message received on topic "+msg.topic+" with QoS "+str(msg.qos)+" and payload "+msg.payload)
-        return ret
+    def on_message(self, obj, msg):
+        self.message = msg.topic+" "+msg.payload
+        self.received = True 
 
     def publish(self, channel, message):
         self.pubsu.publish(channel, message)
 
     def subscribe(self, channels):
         for channel in channels:
-            print("channel "+channel)
             self.channels.add(channel)
             self.pubsu.subscribe(channel)
 
@@ -41,9 +41,15 @@ class MQTTPubSub(object):
     def pubsub(self):
         return self
 
+    def recv(self):
+        while self.received == False:
+            self.pubsu.loop();
+        self.received = False
+        return self.message
+
     def listen(self):
-        while self.pubsu.loop() == 0:
-            channel, _, data = self.sub.recv().partition(" ")
+        while True:
+            channel, _, data = self.recv().partition(" ")
             yield {"type": "message", "channel": channel, "data": data}
 
 
@@ -55,6 +61,12 @@ if __name__ == "__main__":
     pubsub.subscribe(["teste"])
     try:
         while True:
-            print("Retorno: "+str(pubsub.pubsu.loop_read()))
+            pubsub.publish("teste",pubsub.recv())
+            messages += 1
+            now = time.time()
+            if now - last > 1:
+                print "%s msg/sec" % messages
+                last = now
+                messages = 0
     except (KeyboardInterrupt, SystemExit):
         pass
