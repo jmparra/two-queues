@@ -10,8 +10,9 @@ class MQTTPubSub(object):
         #create an mqtt client
         mypid = os.getpid()
         client_uniq = "two_queue_"+str(mypid)
-        self.pubsub = mosquitto.Mosquitto(client_uniq)
-        self.pubsub.connect(host)
+        self.pubsu = mosquitto.Mosquitto(client_uniq)
+        self.pubsu.connect(host)
+        self.pubsu.on_message = self.on_message
         #self.pub = context.socket(zmq.PUSH)
         #self.pub.connect("tcp://%s:%s" % (host, 5562))
         #self.sub = context.socket(zmq.SUB)
@@ -20,47 +21,40 @@ class MQTTPubSub(object):
 
     def on_message(mosq, obj, msg):
         ret = msg.topic+" "+msg.payload
+        print("Message received on topic "+msg.topic+" with QoS "+str(msg.qos)+" and payload "+msg.payload)
         return ret
 
     def publish(self, channel, message):
-        self.pubsub.publish(channel, message)
+        self.pubsu.publish(channel, message)
 
     def subscribe(self, channels):
         for channel in channels:
+            print("channel "+channel)
             self.channels.add(channel)
-            self.pubsub.subscribe(channel)
+            self.pubsu.subscribe(channel)
 
     def unsubscribe(self, channels):
         for channel in channels:
             self.channels.remove(channel)
-            self.pubsub.unsubscribe(channel)
+            self.pubsu.unsubscribe(channel)
 
     def pubsub(self):
         return self
 
     def listen(self):
-        while self.pubsub.loop() == 0:
+        while self.pubsu.loop() == 0:
             channel, _, data = self.sub.recv().partition(" ")
             yield {"type": "message", "channel": channel, "data": data}
 
 
-def serve(quiet):
-    context = zmq.Context()
-    receiver = context.socket(zmq.PULL)
-    receiver.bind("tcp://*:%s" % 5562)
-    sender = context.socket(zmq.PUB)
-    sender.bind("tcp://*:%s" % 5561)
+if __name__ == "__main__":
+    receiver = MQTTPubSub(host="127.0.0.1")
+    pubsub = receiver.pubsub()
     last = time.time()
     messages = 0
+    pubsub.subscribe(["teste"])
     try:
         while True:
-            sender.send(receiver.recv())
-            if not quiet:
-                messages += 1
-                now = time.time()
-                if now - last > 1:
-                    print "%s msg/sec" % messages
-                    last = now
-                    messages = 0
+            print("Retorno: "+str(pubsub.pubsu.loop_read()))
     except (KeyboardInterrupt, SystemExit):
         pass
