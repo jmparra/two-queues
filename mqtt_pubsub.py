@@ -10,12 +10,17 @@ class MQTTPubSub(object):
         #create an mqtt client
         mypid = os.getpid()
         client_uniq = "two_queue_"+str(mypid)
-        self.pubsub = mqttc.connect(host)
+        self.pubsub = mosquitto.Mosquitto(client_uniq)
+        self.pubsub.connect(host)
         #self.pub = context.socket(zmq.PUSH)
         #self.pub.connect("tcp://%s:%s" % (host, 5562))
         #self.sub = context.socket(zmq.SUB)
         #self.sub.connect("tcp://%s:%s" % (host, 5561))
         self.channels = set()
+
+    def on_message(mosq, obj, msg):
+        ret = msg.topic+" "+msg.payload
+        return ret
 
     def publish(self, channel, message):
         self.pubsub.publish(channel, message)
@@ -34,7 +39,7 @@ class MQTTPubSub(object):
         return self
 
     def listen(self):
-        while True:
+        while self.pubsub.loop() == 0:
             channel, _, data = self.sub.recv().partition(" ")
             yield {"type": "message", "channel": channel, "data": data}
 
