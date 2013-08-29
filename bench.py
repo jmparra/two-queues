@@ -46,6 +46,7 @@ runs = {
     "py_redis": ["py", "--redis", "--unbuffered"],
     "py_redis_buffered": ["py", "--redis"],
     "py_zmq": ["py"],
+    "py_mqtt": ["py","--mqtt"],
     "go_redis": ["go", "--redis"],
     "go_zmq": ["go"],
 }
@@ -55,16 +56,17 @@ colours = {
     "py_redis": "red",
     "py_redis_buffered": "green",
     "py_zmq": "blue",
+    "py_mqtt": "coral",
     "go_redis": "violet",
     "go_zmq": "orange",
 }
 
 # Groups of runs mapped to each graph.
 plots = {
-    "two-queues-1": ["py_zmq", "py_redis"],
-    "two-queues-2": ["py_zmq", "py_redis", "py_redis_buffered"],
+    "two-queues-1": ["py_zmq", "py_redis", "py_mqtt"],
+    "two-queues-2": ["py_zmq", "py_redis", "py_redis_buffered", "py_mqtt"],
     "two-queues-3": ["py_zmq", "py_redis", "py_redis_buffered",
-                     "go_zmq", "go_redis"],
+                     "go_zmq", "go_redis", "py_mqtt"],
 }
 
 # Store all results in an output directory.
