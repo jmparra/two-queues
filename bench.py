@@ -90,7 +90,7 @@ for name, names in plots.items():
     with open(output_path(names[0] + ".dat"), "r") as f:
         clients = len(f.read().split())
     with open(name + ".p", "w") as f:
-        lines = ", ".join([line % (l, l.replace("_", " "), colours[l])
+        lines = ", ".join([line % (output_path(l), l.replace("_", " "), colours[l])
                            for l in names])
         f.write(plotfile % {"name": name, "lines": lines, "clients": clients})
     Popen(["gnuplot", name + ".p"], stderr=PIPE)
