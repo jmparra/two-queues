@@ -7,7 +7,11 @@ function new_client() {
   * Returns a new pubsub client instance - MQTT
   * client, based on command-line arg.
   */
-  var client = new MQTTPubSub();
+  var client;
+
+  if (program.mqtt){
+  	client = new MQTTPubSub();
+  }
   return client;
 }
 
@@ -81,6 +85,7 @@ program
   .option('--num-channels <n>', 'Num of channels', 1)
   .option('--message-size <n>', 'Size of message', 20)
   .option('--quiet', 'verbose')
+  .option('--mqtt', 'MQTT server')
   .parse(process.argv);
 
 for (var i = 0; i < program.numChannels; i++) {

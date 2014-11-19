@@ -43,12 +43,13 @@ def run_clients(lang, *args):
 
 # All test_client runs and their cli args.
 runs = {
-    "py_redis": ["py", "--redis", "--unbuffered"],
-    "py_redis_buffered": ["py", "--redis"],
-    "py_zmq": ["py"],
+    # "py_redis": ["py", "--redis", "--unbuffered"],
+    # "py_redis_buffered": ["py", "--redis"],
+    # "py_zmq": ["py"],
     "py_mqtt": ["py","--mqtt"],
-    "go_redis": ["go", "--redis"],
-    "go_zmq": ["go"],
+    # "go_redis": ["go", "--redis"],
+    # "go_zmq": ["go"],
+    "js_mqtt": ["js","--mqtt"],
 }
 
 # Consistent graph colours defined for each of the runs.
@@ -59,11 +60,13 @@ colours = {
     "py_mqtt": "coral",
     "go_redis": "violet",
     "go_zmq": "orange",
+    "js_mqtt": "cyan"
 }
 
 # Groups of runs mapped to each graph.
 plots = {
     "two-queues-1": ["py_zmq", "py_redis", "py_mqtt"],
+    "two-queues-mqtt": ["js_mqtt", "py_mqtt"],
     "two-queues-2": ["py_zmq", "py_redis", "py_redis_buffered", "py_mqtt"],
     "two-queues-3": ["py_zmq", "py_redis", "py_redis_buffered",
                      "go_zmq", "go_redis", "py_mqtt"],
