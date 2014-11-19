@@ -1,6 +1,6 @@
 
 import time
-import mosquitto
+import paho.mqtt.client as paho
 import os
 
 
@@ -10,19 +10,19 @@ class MQTTPubSub(object):
         #create an mqtt client
         mypid = os.getpid()
         client_uniq = "two_queue_"+str(mypid)
-        self.pubsu = mosquitto.Mosquitto(client_uniq)
+        self.pubsu = paho.Client(client_uniq)
         self.pubsu.connect(host)
         self.pubsu.on_message = self.on_message
         self.channels = set()
         self.received = False
         self.message  = ""
 
-    def on_message(self, obj, msg):
+    def on_message(self, client, obj, msg):
         self.message = msg.topic+" "+msg.payload
         self.received = True
 
     def publish(self, channel, message):
-        self.pubsu.publish(channel, message)
+        self.pubsu.publish(channel, str(message))
 
     def subscribe(self, channels):
         if type(channels) == list:
