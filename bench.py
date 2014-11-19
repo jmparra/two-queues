@@ -15,7 +15,7 @@ def popen_args(filename, *args):
     if filename.split(".")[-1] == "py":
         return ["python"] + args
     elif filename.split(".")[-1] == "js":
-        return ["node"] + list(args)
+        return ["node", "--nouse_idle_notification"] + list(args)
     else:
         return ["go", "run"] + list(args)
 
@@ -52,7 +52,6 @@ runs = {
     # "go_redis": ["go", "--redis"],
     # "go_zmq": ["go"],
     "js_mqtt": ["js","--mqtt"],
-    "js_mqtt_flag": ["js","--mqtt","--nouse_idle_notification"],
 }
 
 # Consistent graph colours defined for each of the runs.
@@ -63,14 +62,13 @@ colours = {
     "py_mqtt": "coral",
     "go_redis": "violet",
     "go_zmq": "orange",
-    "js_mqtt": "cyan",
-    "js_mqtt_flag": "fuchsia",
+    "js_mqtt": "cyan"
 }
 
 # Groups of runs mapped to each graph.
 plots = {
     # "two-queues-1": ["py_zmq", "py_redis", "py_mqtt"],
-    "two-queues-mqtt": ["js_mqtt", "py_mqtt", "js_mqtt_flag"],
+    "two-queues-mqtt": ["js_mqtt", "py_mqtt"],
     # "two-queues-2": ["py_zmq", "py_redis", "py_redis_buffered", "py_mqtt"],
     # "two-queues-3": ["py_zmq", "py_redis", "py_redis_buffered",
     #                  "go_zmq", "go_redis", "py_mqtt"],
