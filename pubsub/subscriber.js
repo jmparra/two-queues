@@ -34,6 +34,6 @@ client.on('message', function (packet) {
 });
 
 //Clean exit
-process.on('SIGTERM', function() {
-  client.close();
-});
+// process.on('SIGTERM', function() {
+//   client.close();
+// });
