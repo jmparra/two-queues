@@ -1,11 +1,11 @@
-var MQTTPubSub = require('../mqtt_pubsub');
+var ZMQPubSub = require('../zmq_pubsub');
 
 
 function new_client() {
 	/*
-  * Returns a new pubsub client instance - MQTT
+  * Returns a new pubsub client instance - ZMQ
   */
-  var client = new MQTTPubSub();
+  var client = new ZMQPubSub();
   return client;
 }
 

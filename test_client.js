@@ -1,17 +1,13 @@
 var program       = require('commander')
-  , MQTTPubSub    = require('./mqtt_pubsub')
+  , ZMQPubSub    = require('./zmq_pubsub')
 	, child_process = require('child_process');
 
 function new_client() {
 	/*
-  * Returns a new pubsub client instance - MQTT
+  * Returns a new pubsub client instance - ZMQ
   * client, based on command-line arg.
   */
-  var client;
-
-  if (program.mqtt){
-  	client = new MQTTPubSub();
-  }
+  var client = new ZMQPubSub();
   return client;
 }
 
