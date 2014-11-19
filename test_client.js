@@ -56,7 +56,6 @@ function get_metrics() {
     var now = new Date();
     now = now.getTime() / seconds;
     if ((now - start) >= program.numSeconds) {
-    	client.close();
       console.log(metrics[Math.ceil(metrics.length/2)], 'median msg/sec');
       clean();
     } else {
