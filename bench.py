@@ -14,6 +14,8 @@ def popen_args(filename, *args):
     args = [filename, "--quiet"] + list(args)
     if filename.split(".")[-1] == "py":
         return ["python"] + args
+    elif filename.split(".")[-1] == "js":
+        return ["node", "--nouse_idle_notification"] + list(args)
     else:
         return ["go", "run"] + list(args)
 
