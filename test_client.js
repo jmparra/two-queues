@@ -48,15 +48,15 @@ function get_metrics() {
   start = start.getTime() / seconds;
 
   client.subscribe('/metrics');
-	client.on('message', function (topic, message) {
-		metrics.push(message);
+	client.on('message', function (packet) {
+		metrics.push(packet.toString().split(' ')[1]);
 	});
 
   function metric() {
     var now = new Date();
     now = now.getTime() / seconds;
     if ((now - start) >= program.numSeconds) {
-    	client = null;
+    	client.close();
       console.log(metrics[Math.ceil(metrics.length/2)], 'median msg/sec');
       clean();
     } else {

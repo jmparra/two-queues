@@ -22,3 +22,8 @@ function publish() {
 }
 
 publish();
+
+//Clean exit
+process.on('SIGTERM', function() {
+  client.close();
+});

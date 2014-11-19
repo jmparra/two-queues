@@ -22,7 +22,7 @@ var client = new_client()
 last = last.getTime() / seconds;
 
 client.subscribe('/perf');
-client.on('message', function (topic, msg) {
+client.on('message', function (packet) {
 	var now = new Date();
 	messages++;
   now = now.getTime() / seconds;
@@ -31,4 +31,9 @@ client.on('message', function (topic, msg) {
     last = now;
     messages = 0;
   }
+});
+
+//Clean exit
+process.on('SIGTERM', function() {
+  client.close();
 });

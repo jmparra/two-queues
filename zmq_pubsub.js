@@ -22,5 +22,10 @@ ZMQPubSub.prototype.on = function(event, callback) {
   return this.sub.on(event, callback);
 }
 
+ZMQPubSub.prototype.close = function() {
+  this.sub.close();
+  this.pub.close();
+}
+
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
   module.exports = ZMQPubSub;
