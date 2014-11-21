@@ -6,12 +6,9 @@ var serve = function(quiet) {
   var sender = zmq.socket('pub');
   sender.bind('tcp://*:5561');
 
-  receiver.setsockopt(zmq.ZMQ_RATE, 5000);
-  receiver.setsockopt(zmq.ZMQ_SNDHWM, 5000);
-  receiver.setsockopt(zmq.ZMQ_RCVHWM, 5000);
-  sender.setsockopt(zmq.ZMQ_RATE, 5000);
-  sender.setsockopt(zmq.ZMQ_SNDHWM, 5000);
-  sender.setsockopt(zmq.ZMQ_RCVHWM, 5000);
+  zmq.ZMQ_RATE = 5000;
+  zmq.ZMQ_SNDHWM = 5000;
+  zmq.ZMQ_RCVHWM = 5000;
   
 
   var seconds = 1000;
