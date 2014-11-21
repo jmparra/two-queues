@@ -5,12 +5,7 @@ var serve = function(quiet) {
   receiver.bind('tcp://*:5562');
   var sender = zmq.socket('pub');
   sender.bind('tcp://*:5561');
-
-  zmq.ZMQ_RATE = 5000;
-  zmq.ZMQ_SNDHWM = 5000;
-  zmq.ZMQ_RCVHWM = 5000;
   
-
   var seconds = 1000;
   var last = new Date();
   var message = 0;
